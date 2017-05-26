@@ -1,0 +1,43 @@
+{
+  "name": "rc2",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm test",
+    "prepublish": "npm test",
+    "test": "npm run build && jest --verbose --coverage"
+  },
+  "devDependencies": {
+    "@types/jest": "^19.2.3",
+    "@types/node": "^7.0.22",
+    "flat": "^2.0.1",
+    "jest": "^20.0.4",
+    "js-yaml": "^3.8.4",
+    "minimist": "^1.2.0",
+    "ts-jest": "^20.0.4",
+    "typescript": "^2.3.3"
+  },
+  "dependencies": {
+    "co": "^4.6.0",
+    "lodash.merge": "^4.6.0",
+    "micromatch": "^2.3.11",
+    "thunk-to-promise": "^1.0.1"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "testPathIgnorePatterns": [
+      "/node_modules",
+      "fixtures"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ]
+  },
+  "files": ["index.d.ts", "lib/**/*.js", "lib/**/*.d.ts"]
+}
