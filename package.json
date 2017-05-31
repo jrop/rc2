@@ -1,13 +1,14 @@
 {
   "name": "rc2",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "lib/index.js",
   "license": "MIT",
   "scripts": {
     "build": "tsc",
     "prepare": "npm test",
     "prepublish": "npm test",
-    "test": "npm run build && jest --verbose --coverage"
+    "test": "jest --verbose --coverage",
+    "test:watch": "jest --watch"
   },
   "devDependencies": {
     "@types/jest": "^19.2.3",
@@ -15,14 +16,15 @@
     "flat": "^2.0.1",
     "jest": "^20.0.4",
     "js-yaml": "^3.8.4",
+    "json5": "^0.5.1",
     "minimist": "^1.2.0",
     "ts-jest": "^20.0.4",
     "typescript": "^2.3.3"
   },
   "dependencies": {
     "co": "^4.6.0",
+    "glob": "^7.1.2",
     "lodash.merge": "^4.6.0",
-    "micromatch": "^2.3.11",
     "thunk-to-promise": "^1.0.1"
   },
   "jest": {
@@ -39,5 +41,9 @@
       "js"
     ]
   },
-  "files": ["index.d.ts", "lib/**/*.js", "lib/**/*.d.ts"]
+  "files": [
+    "index.d.ts",
+    "lib/**/*.js",
+    "lib/**/*.d.ts"
+  ]
 }

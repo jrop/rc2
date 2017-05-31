@@ -26,6 +26,7 @@ export class Loaders {
 
 	add(ext: string, loader: Loader) {
 		this.loaders.set(ext, loader)
+		return this
 	}
 
 	default(ext: string) {
