@@ -1,0 +1,3 @@
+config:
+  outer: true
+  inner: top

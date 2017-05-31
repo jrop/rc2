@@ -31,6 +31,12 @@ async function isDir(f: string) {
 	}
 }
 
+function isSubdir(top: string, f: string) {
+	if (!top) return true
+	const rel = path.relative(path.resolve(f), path.resolve(top))
+	return rel == '' || rel.includes('..')
+}
+
 async function globAll(globs: string[], cwd: string): Promise<string[]> {
 	const nested: string[][] = await Promise.all(globs.map(g => thunk(done => glob(g, {cwd}, done))))
 	const files = []
@@ -38,7 +44,9 @@ async function globAll(globs: string[], cwd: string): Promise<string[]> {
 	return files
 }
 
-async function findIn(appName: string, cwd: string): Promise<string[]> {
+async function findIn(options: Options, cwd: string): Promise<string[]> {
+	if (!isSubdir(options.top, cwd)) return []
+	const {appName} = options
 	const matches = (await globAll([
 			`.${appName}rc`,
 			`.${appName}rc.*`,
@@ -57,11 +65,11 @@ async function findIn(appName: string, cwd: string): Promise<string[]> {
 	return files.filter(f => Boolean(f)) as string[]
 }
 
-async function findUp(appName: string, cwd: string): Promise<string[]> {
+async function findUp(options: Options, cwd: string): Promise<string[]> {
 	const files = []
 	let curr = cwd
-	while (true) {
-		files.push(...await findIn(appName, curr))
+	while (isSubdir(options.top, curr)) {
+		files.push(...await findIn(options, curr))
 		const next = path.dirname(curr)
 		if (next == curr) break
 		curr = next
@@ -73,6 +81,7 @@ export interface Options {
 	appName: string
 	cwd?: string
 	home?: string
+	top?: string
 	loaders?: Loaders
 	argv?: string[]
 	env?: any
@@ -86,9 +95,9 @@ const __export__: any = async function rc2(options: Options) {
 		env: process.env,
 	}, options)
 	const rcFiles = [
-		...await findIn(options.appName, path.join(options.home)),
-		...await findIn(options.appName, '/etc'),
-		...(await findUp(options.appName, options.cwd)).reverse(),
+		...await findIn(options, path.join(options.home)),
+		...await findIn(options, '/etc'),
+		...(await findUp(options, options.cwd)).reverse(),
 	]
 	const rcs = await Promise.all(rcFiles.map(f => options.loaders.load(options.appName, f)))
 	return _merge({},

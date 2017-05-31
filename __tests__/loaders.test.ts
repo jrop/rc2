@@ -75,3 +75,56 @@ test('rc2 (.config/test/config)', async () => {
 		yml: true,
 	})
 })
+
+test('rc2 (nested)', async () => {
+	expect.assertions(1)
+	const config = await rc2({
+		appName: 'test',
+		cwd: `${__dirname}/fixtures/nested/sub`,
+		home: `${__dirname}/fixtures/empty`,
+		loaders,
+		argv: [],
+		env: {},
+	})
+	expect(config).toEqual({
+		_: [],
+		outer: true,
+		inner: true,
+	})
+})
+
+test('rc2 (nested w/top)', async () => {
+	expect.assertions(1)
+	const config = await rc2({
+		appName: 'test',
+		cwd: `${__dirname}/fixtures/nested/sub`,
+		top: `${__dirname}/fixtures/nested/sub`,
+		home: `${__dirname}/fixtures/empty`,
+		loaders,
+		argv: [],
+		env: {},
+	})
+	expect(config).toEqual({
+		_: [],
+		inner: true,
+	})
+})
+
+test('rc2 (nested-priority)', async () => {
+	expect.assertions(1)
+	const config = await rc2({
+		appName: 'test',
+		cwd: `${__dirname}/fixtures/nested-priority/sub`,
+		home: `${__dirname}/fixtures/empty`,
+		loaders,
+		argv: [],
+		env: {},
+	})
+	expect(config).toEqual({
+		_: [],
+		config: {
+			outer: true,
+			inner: true,
+		},
+	})
+})
