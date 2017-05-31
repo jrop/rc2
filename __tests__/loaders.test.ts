@@ -12,9 +12,8 @@ const loaders = rc2.loaders()
 test('rc2 (.testrc)', async () => {
 	expect.assertions(1)
 	const config = await rc2({
-		appName: 'test',
-		cwd: `${__dirname}/fixtures/.testrc`,
-		home: `${__dirname}/fixtures/empty`,
+		name: 'test',
+		locations: [{bottom: `${__dirname}/fixtures/.testrc`}],
 		loaders,
 		argv: [],
 		env: {},
@@ -29,9 +28,8 @@ test('rc2 (.testrc)', async () => {
 test('rc2 (.test/config)', async () => {
 	expect.assertions(1)
 	const config = await rc2({
-		appName: 'test',
-		cwd: `${__dirname}/fixtures/empty`,
-		home: `${__dirname}/fixtures/.test-config`,
+		name: 'test',
+		locations: [{bottom: `${__dirname}/fixtures/.test-config`}],
 		loaders,
 		argv: [],
 		env: {},
@@ -46,9 +44,8 @@ test('rc2 (.test/config)', async () => {
 test('rc2 (.config/test)', async () => {
 	expect.assertions(1)
 	const config = await rc2({
-		appName: 'test',
-		cwd: `${__dirname}/fixtures/empty`,
-		home: `${__dirname}/fixtures/.config-test`,
+		name: 'test',
+		locations: [{bottom: `${__dirname}/fixtures/.config-test`}],
 		loaders,
 		argv: [],
 		env: {},
@@ -62,9 +59,8 @@ test('rc2 (.config/test)', async () => {
 test('rc2 (.config/test/config)', async () => {
 	expect.assertions(1)
 	const config = await rc2({
-		appName: 'test',
-		cwd: `${__dirname}/fixtures/empty`,
-		home: `${__dirname}/fixtures/.config-test-config`,
+		name: 'test',
+		locations: [{bottom: `${__dirname}/fixtures/.config-test-config`}],
 		loaders,
 		argv: [],
 		env: {},
@@ -79,9 +75,8 @@ test('rc2 (.config/test/config)', async () => {
 test('rc2 (nested)', async () => {
 	expect.assertions(1)
 	const config = await rc2({
-		appName: 'test',
-		cwd: `${__dirname}/fixtures/nested/sub`,
-		home: `${__dirname}/fixtures/empty`,
+		name: 'test',
+		locations: [{bottom: `${__dirname}/fixtures/nested/sub`}],
 		loaders,
 		argv: [],
 		env: {},
@@ -96,10 +91,11 @@ test('rc2 (nested)', async () => {
 test('rc2 (nested w/top)', async () => {
 	expect.assertions(1)
 	const config = await rc2({
-		appName: 'test',
-		cwd: `${__dirname}/fixtures/nested/sub`,
-		top: `${__dirname}/fixtures/nested/sub`,
-		home: `${__dirname}/fixtures/empty`,
+		name: 'test',
+		locations: [{
+			bottom: `${__dirname}/fixtures/nested/sub`,
+			top: `${__dirname}/fixtures/nested/sub`,
+		}],
 		loaders,
 		argv: [],
 		env: {},
@@ -113,9 +109,10 @@ test('rc2 (nested w/top)', async () => {
 test('rc2 (nested-priority)', async () => {
 	expect.assertions(1)
 	const config = await rc2({
-		appName: 'test',
-		cwd: `${__dirname}/fixtures/nested-priority/sub`,
-		home: `${__dirname}/fixtures/empty`,
+		name: 'test',
+		locations: [{
+			bottom: `${__dirname}/fixtures/nested-priority/sub`,
+		}],
 		loaders,
 		argv: [],
 		env: {},

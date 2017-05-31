@@ -8,6 +8,12 @@ import _merge = require('lodash.merge')
 
 import {Loader, Loaders} from './loaders'
 
+function flatten(a: any[]) {
+	const res = []
+	a.forEach(i => Array.isArray(i) ? res.push(...flatten(i)) : res.push(i))
+	return res
+}
+
 function args(argv) {
 	const minimist = require('minimist')
 	return minimist(argv)
@@ -45,17 +51,16 @@ async function globAll(globs: string[], cwd: string): Promise<string[]> {
 }
 
 async function findIn(options: Options, cwd: string): Promise<string[]> {
-	if (!isSubdir(options.top, cwd)) return []
-	const {appName} = options
+	const {name} = options
 	const matches = (await globAll([
-			`.${appName}rc`,
-			`.${appName}rc.*`,
-			`.${appName}/config`,
-			`.${appName}/config.*`,
-			`.config/${appName}`,
-			`.config/${appName}.*`,
-			`.config/${appName}/config`,
-			`.config/${appName}/config.*`,
+			`.${name}rc`,
+			`.${name}rc.*`,
+			`.${name}/config`,
+			`.${name}/config.*`,
+			`.config/${name}`,
+			`.config/${name}.*`,
+			`.config/${name}/config`,
+			`.config/${name}/config.*`,
 		], cwd))
 		.map(f => path.join(cwd, f))
 	const files = await Promise.all(matches.map(async f => {
@@ -65,10 +70,10 @@ async function findIn(options: Options, cwd: string): Promise<string[]> {
 	return files.filter(f => Boolean(f)) as string[]
 }
 
-async function findUp(options: Options, cwd: string): Promise<string[]> {
+async function findUp(options: Options, loc: SearchLocation): Promise<string[]> {
 	const files = []
-	let curr = cwd
-	while (isSubdir(options.top, curr)) {
+	let curr = loc.bottom
+	while (isSubdir(loc.top, curr)) {
 		files.push(...await findIn(options, curr))
 		const next = path.dirname(curr)
 		if (next == curr) break
@@ -77,32 +82,29 @@ async function findUp(options: Options, cwd: string): Promise<string[]> {
 	return files
 }
 
-export interface Options {
-	appName: string
-	cwd?: string
-	home?: string
+export interface SearchLocation {
 	top?: string
+	bottom: string
+}
+export interface Options {
+	name: string
+	locations?: SearchLocation[]
 	loaders?: Loaders
 	argv?: string[]
 	env?: any
 }
 const __export__: any = async function rc2(options: Options) {
-	options = Object.assign({
-		cwd: process.cwd(),
-		home: os.homedir(),
+	options = _merge({
+		locations: [],
 		loaders: new Loaders(),
 		argv: process.argv.slice(2),
 		env: process.env,
 	}, options)
-	const rcFiles = [
-		...await findIn(options, path.join(options.home)),
-		...await findIn(options, '/etc'),
-		...(await findUp(options, options.cwd)).reverse(),
-	]
-	const rcs = await Promise.all(rcFiles.map(f => options.loaders.load(options.appName, f)))
+	const rcFiles = flatten(await Promise.all(options.locations.map(loc => findUp(options, loc)))) as string[]
+	const rcs = await Promise.all(rcFiles.map(f => options.loaders.load(options.name, f)))
 	return _merge({},
-		...rcs,
-		env(options.appName, options.env),
+		...rcs.reverse(),
+		env(options.name, options.env),
 		args(options.argv))
 }
 __export__.loaders = () => new Loaders()
