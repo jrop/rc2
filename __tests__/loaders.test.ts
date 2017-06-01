@@ -1,7 +1,4 @@
-import fs = require('fs')
 import rc2 from '../src'
-import thunk = require('thunk-to-promise')
-import yaml = require('js-yaml')
 
 const loaders = rc2.loaders()
 	.default('json')
@@ -123,5 +120,24 @@ test('rc2 (nested-priority)', async () => {
 			outer: true,
 			inner: true,
 		},
+	})
+})
+
+test('rc2 (default)', async () => {
+	expect.assertions(1)
+	const config = await rc2({
+		name: 'test',
+		locations: [{
+			top: `${__dirname}/fixtures/empty`,
+			bottom: `${__dirname}/fixtures/empty`,
+		}],
+		loaders,
+		default: {default: true},
+		argv: [],
+		env: {},
+	})
+	expect(config).toEqual({
+		_: [],
+		default: true,
 	})
 })

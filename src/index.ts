@@ -1,11 +1,8 @@
-import co = require('co')
 import fs = require('fs')
-import glob = require('glob')
 import os = require('os')
 import path = require('path')
-import thunk = require('thunk-to-promise')
-import _merge = require('lodash.merge')
 
+import {co, flat, glob, minimist, thunk, _merge} from './vendor'
 import {Loader, Loaders} from './loaders'
 
 function flatten(a: any[]) {
@@ -15,12 +12,10 @@ function flatten(a: any[]) {
 }
 
 function args(argv) {
-	const minimist = require('minimist')
 	return minimist(argv)
 }
 
 function env(appName: string, env: any) {
-	const flat = require('flat')
 	const prefix = `${appName}_`
 	const flatConfig = Object.assign({}, ...Object.keys(env)
 		.filter(key => key.startsWith(prefix))
@@ -90,6 +85,7 @@ export interface Options {
 	name: string
 	locations?: SearchLocation[]
 	loaders?: Loaders
+	default?: any
 	argv?: string[]
 	env?: any
 }
@@ -103,6 +99,7 @@ const __export__: any = async function rc2(options: Options) {
 	const rcFiles = flatten(await Promise.all(options.locations.map(loc => findUp(options, loc)))) as string[]
 	const rcs = await Promise.all(rcFiles.map(f => options.loaders.load(options.name, f)))
 	return _merge({},
+		options.default,
 		...rcs.reverse(),
 		env(options.name, options.env),
 		args(options.argv))

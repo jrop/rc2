@@ -1,7 +1,7 @@
-import co = require('co')
 import fs = require('fs')
 import path = require('path')
-import thunk = require('thunk-to-promise')
+
+import {co, thunk} from './vendor'
 
 async function read(f) {
 	return thunk(done => fs.readFile(f, 'utf-8', done))
