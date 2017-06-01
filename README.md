@@ -14,7 +14,7 @@ A follow-up to [rc](https://github.com/dominictarr/rc) that is more configurable
 ## Example
 
 ```ts
-import * as rc2 from 'rc2'
+import rc2 from 'rc2'
 async function main() {
 	const loaders = rc2.loaders()
 		.default('json')
