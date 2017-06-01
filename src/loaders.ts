@@ -29,8 +29,20 @@ export class Loaders {
 		return this
 	}
 
-	default(ext: string) {
-		this.add('default', f => this.loaders.get(ext)(f))
+	default(exts: string[]) {
+		this.add('default', async f => {
+			const errs = {}
+			for (const ext of exts) {
+				try {
+					return this.loaders.get(ext)(f)
+				} catch (error) {
+					errs[ext] = error
+				}
+			}
+			const e = new Error(`Could not load ${f} as (${exts.join(', ')})`)
+			;(e as any).errors = errs
+			throw e
+		})
 		return this
 	}
 

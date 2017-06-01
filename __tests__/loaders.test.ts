@@ -1,7 +1,7 @@
 import rc2 from '../src'
 
 const loaders = rc2.loaders()
-	.default('json')
+	.default(['json', 'js', 'yaml'])
 	.js()
 	.json()
 	.yaml()

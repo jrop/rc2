@@ -93,9 +93,10 @@ const __export__: any = async function rc2(options: Options) {
 	options = _merge({
 		locations: [],
 		loaders: new Loaders(),
-		argv: process.argv.slice(2),
 		env: process.env,
 	}, options)
+	if (!options.argv)
+		options.argv = process.argv.slice(2)
 	const rcFiles = flatten(await Promise.all(options.locations.map(loc => findUp(options, loc)))) as string[]
 	const rcs = await Promise.all(rcFiles.map(f => options.loaders.load(options.name, f)))
 	return _merge({},

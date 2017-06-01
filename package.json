@@ -1,6 +1,6 @@
 {
   "name": "rc2",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "lib/index.js",
   "license": "MIT",
   "scripts": {
@@ -15,8 +15,8 @@
     "@types/node": "^7.0.22",
     "awesome-typescript-loader": "^3.1.3",
     "co": "^4.6.0",
-    "glob": "^7.1.2",
     "flat": "^2.0.1",
+    "glob": "^7.1.2",
     "jest": "^20.0.4",
     "js-yaml": "^3.8.4",
     "json5": "^0.5.1",

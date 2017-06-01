@@ -17,7 +17,7 @@ A follow-up to [rc](https://github.com/dominictarr/rc) that is more configurable
 import rc2 from 'rc2'
 async function main() {
 	const loaders = rc2.loaders()
-		.default('json')
+		.default(['ini', 'json', 'js', 'yaml'])
 		.ini()  // must have the `ini` module installed
 		.json() // uses `json5` module, if installed, otherwise uses `JSON.parse(...)`
 		.js()   // uses `require(...)`
@@ -74,7 +74,7 @@ A loader instance can be created with `rc2.loaders()`.  This instance has the fo
 ```ts
 declare class Loaders {
 	add(ext: string, loader: (f: string) => any): this
-	default(ext: string): this
+	default(exts: string[]): this
 	ini(): this
 	js(): this
 	json(): this
