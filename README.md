@@ -1,5 +1,7 @@
 # rc2
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/jrop/rc2.svg)](https://greenkeeper.io/)
+
 A follow-up to [rc](https://github.com/dominictarr/rc) that is more configurable.
 
 *More configure!  Such less bloat!*
